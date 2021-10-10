@@ -8,7 +8,7 @@ const fileStorage = multerS3({
     s3,
     acl: "private", // "public-read",
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    contentDisposition: "inline",
+    contentDisposition: "attachment",
     bucket,
     metadata: (req, file, cb) => {
         cb(null, { fieldName: file.fieldname })
@@ -31,7 +31,6 @@ const uploadfileToS3 = multer({
 }).single("file");
 
 const getfileFromS3 = async (req, res, next) => {
-    console.log("here");
     const Key = req.query.key;
     try {
         const { Body } = await s3.getObject({

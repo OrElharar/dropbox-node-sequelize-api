@@ -38,9 +38,9 @@ router.post("/upload-file", userAuth, uploadfileToS3, async (req, res) => {
 
 })
 
-router.get("/files/:token", async (req, res) => {
+router.get("/files", userAuth, async (req, res) => {
     try {
-        await confirmAuthByToken(req, req.params.token)
+
         const files = await File.findAll({
             where: {
                 userId: req.user.id
@@ -59,7 +59,8 @@ router.get("/files/:token", async (req, res) => {
     }
 })
 
-router.get("/get-file", userAuth, getfileFromS3, async (req, res) => {
+router.get("/get-file", getfileFromS3, async (req, res) => {
+    await confirmAuthByToken(req, req.query.token)
     const fileName = req.query.name
     const stream = Readable.from(req.fileBuffer)
     console.log({ fileName, isBufferExist: req.fileBuffer != null });
